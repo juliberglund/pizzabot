@@ -29,16 +29,35 @@ const cookingTime = (orderQuantity) => {
 alert(
   `Hey! Happy to serve your pizza. On our menu we have ${vegetarian}, ${hawaiian}, and ${pepperoni}.`
 );
-const orderName = prompt(
+let orderName = prompt(
   `What type of pizza do you want? ${vegetarian}, ${hawaiian}, ${pepperoni}`
 ).toLowerCase();
-if (checkOrderName(orderName)) {
-  const orderQuantity = prompt(`How many of ${orderName} do you want?`);
-  const sum = totalCost(orderQuantity);
-  const time = cookingTime(orderQuantity);
-  alert(
-    `Great, I'll get started on your ${orderName} right away, it will cost ${sum} kr. The pizzas will take ${time} minutes.`
-  );
-} else {
-  alert("error");
+
+while (true) {
+  // Check if the pizza is on the menu
+  if (checkOrderName(orderName)) {
+    // If the order is valid, ask how many pizzas they want
+    let orderQuantity = Number(prompt(`How many of ${orderName} do you want?`));
+
+    // Validate if the quantity is a valid number
+    if (isNaN(orderQuantity) || orderQuantity < 1) {
+      alert("Please enter a valid quantity greater than 0.");
+    } else {
+      // Calculate the total cost and cooking time
+      const sum = totalCost(orderQuantity);
+      const time = cookingTime(orderQuantity);
+
+      // Display the final order message
+      alert(
+        `Great, I'll get started on your ${orderName} right away, it will cost ${sum} kr. The pizzas will take ${time} minutes.`
+      );
+      break; // Break out of the loop after a valid order
+    }
+  } else {
+    // If the pizza is not on the menu, ask again for a valid pizza type
+    alert("Sorry, we don't serve that type of pizza.");
+    orderName = prompt(
+      `What type of pizza do you want? ${vegetarian}, ${hawaiian}, ${pepperoni}`
+    ).toLowerCase(); // Ask again for a valid pizza type
+  }
 }
