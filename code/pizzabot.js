@@ -3,19 +3,21 @@ const hawaiian = "Hawaiian Pizza";
 const pepperoni = "Pepperoni Pizza";
 const pizzaPrice = 80;
 
-// function to see if the ordername input is correct
+// Function to check if the pizza is on the menu
 const checkOrderName = (orderName) => {
   return (
-    orderName === vegetarian.toLowerCase() ||
-    orderName === hawaiian.toLowerCase() ||
-    orderName === pepperoni.toLowerCase()
+    orderName === "vegetarian" ||
+    orderName === "hawaiian" ||
+    orderName === "pepperoni"
   );
 };
-// Calculates the cost of the order
+
+// Function to calculate the total cost
 const totalCost = (orderQuantity) => {
   return orderQuantity * pizzaPrice;
 };
-// Calculate cookling time
+
+// Function to calculate the cooking time based on quantity
 const cookingTime = (orderQuantity) => {
   if (orderQuantity >= 1 && orderQuantity <= 2) {
     return 10;
@@ -25,39 +27,37 @@ const cookingTime = (orderQuantity) => {
     return 20;
   }
 };
-// Call the functions
-alert(
-  `Hey! Happy to serve your pizza. On our menu we have ${vegetarian}, ${hawaiian}, and ${pepperoni}.`
-);
-let orderName = prompt(
-  `What type of pizza do you want? ${vegetarian}, ${hawaiian}, ${pepperoni}`
-).toLowerCase();
 
-while (true) {
-  // Check if the pizza is on the menu
-  if (checkOrderName(orderName)) {
-    // If the order is valid, ask how many pizzas they want
-    let orderQuantity = Number(prompt(`How many of ${orderName} do you want?`));
+// Handle the form submission
+document
+  .getElementById("pizzaForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the form from submitting and refreshing the page
 
-    // Validate if the quantity is a valid number
-    if (isNaN(orderQuantity) || orderQuantity < 1) {
-      alert("Please enter a valid quantity greater than 0.");
+    // Get the values from the form
+    const orderName = document.getElementById("pizza").value; // pizza type
+    const orderQuantity = Number(document.getElementById("quantity").value); // quantity of pizzas
+
+    // Check if the pizza is on the menu
+    if (checkOrderName(orderName)) {
+      if (isNaN(orderQuantity) || orderQuantity < 1) {
+        alert("Please enter a valid quantity greater than 0.");
+      } else {
+        // Calculate total cost and cooking time
+        const sum = totalCost(orderQuantity);
+        const time = cookingTime(orderQuantity);
+
+        // Display the result
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = `
+        <p>Great, I'll get started on your ${
+          orderName.charAt(0).toUpperCase() + orderName.slice(1)
+        } right away.</p>
+        <p>It will cost ${sum} kr.</p>
+        <p>The pizzas will take ${time} minutes to prepare.</p>
+      `;
+      }
     } else {
-      // Calculate the total cost and cooking time
-      const sum = totalCost(orderQuantity);
-      const time = cookingTime(orderQuantity);
-
-      // Display the final order message
-      alert(
-        `Great, I'll get started on your ${orderName} right away, it will cost ${sum} kr. The pizzas will take ${time} minutes.`
-      );
-      break; // Break out of the loop after a valid order
+      alert("Sorry, we don't serve that type of pizza.");
     }
-  } else {
-    // If the pizza is not on the menu, ask again for a valid pizza type
-    alert("Sorry, we don't serve that type of pizza.");
-    orderName = prompt(
-      `What type of pizza do you want? ${vegetarian}, ${hawaiian}, ${pepperoni}`
-    ).toLowerCase(); // Ask again for a valid pizza type
-  }
-}
+  });
